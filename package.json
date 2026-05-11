@@ -11,7 +11,9 @@
     "sdkVersion": "3",
     "targetPlatforms": [
       "aplite",
-      "basalt"
+      "basalt",
+      "flint",
+      "emery"
     ],
     "enableMultiJS": false,
     "capabilities": [

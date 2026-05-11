@@ -175,8 +175,13 @@ static bool showing_statusbar = true;
 #define AK_TRANS_ABBR_DECEMBER   542
 
 // primary coordinates
+#ifdef PBL_PLATFORM_EMERY
+#define DEVICE_WIDTH        200
+#define DEVICE_HEIGHT       228
+#else
 #define DEVICE_WIDTH        144
 #define DEVICE_HEIGHT       168
+#endif
 #define LAYOUT_STAT           0 // 20 tall
 #define LAYOUT_SLOT_TOP      24 // 72 tall
 #define LAYOUT_SLOT_BOT      96 // 72 tall, 4px gap above
@@ -196,7 +201,11 @@ static bool showing_statusbar = true;
 #define REL_CLOCK_DATE_LEFT       2
 #define REL_CLOCK_DATE_TOP        0
 #define REL_CLOCK_DATE_HEIGHT    30 // date/time overlap, due to the way text is 'positioned'
+#ifdef PBL_PLATFORM_EMERY
+#define REL_CLOCK_DATE_WIDTH    196
+#else
 #define REL_CLOCK_DATE_WIDTH    140
+#endif
 #define REL_CLOCK_TIME_LEFT       0
 #define REL_CLOCK_TIME_TOP        7
 #define REL_CLOCK_TIME_HEIGHT    60 // date/time overlap, due to the way text is 'positioned'
