@@ -3,3 +3,17 @@ build
 .lock-waf*
 pebble-screenshot*
 .*.swp
+
+# Markdown files
+*.md
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+
+node_modules/

@@ -372,7 +372,7 @@ void setInvColors(GContext* ctx) {
 
 void weather_layer_update_callback(Layer *me, GContext* ctx) {
   (void)me; // 144x72
-  static char temp_current[] = "N/A  ";
+  static char temp_current[10] = "N/A  ";
   static char cond_current[] = "0";
   if (weather.current < 900) {
     snprintf(temp_current, sizeof(temp_current), "%d\u00b0", weather.current);
@@ -657,7 +657,7 @@ void update_date_text() {
       "%y%m%e",   // 248 YYMMdd
     };
     char date_text[24];
-    static char date_string[48];
+    static char date_string[64];
     // http://www.cplusplus.com/reference/ctime/strftime/
 
     if (settings.date_format < 195) { // localized date formats...
@@ -782,7 +782,7 @@ char * get_doy_text() {
 }
 
 char * get_dliy_text() {
-  static char dliy_text[] = "R000";
+  static char dliy_text[14] = "R000";
   int daysThisFeb = daysInMonth(1, currentTime->tm_year + 1900);
   int daysThisYear = 365;
   if (daysThisFeb == 29) { daysThisYear = 366; }
@@ -807,7 +807,7 @@ void update_doy_dliy_text(TextLayer *which_layer) {
 }
 
 void update_timezone_text(TextLayer *which_layer) {
-  static char timezone_text[10];
+  static char timezone_text[12];
   int tz_hours = 0;
   int tz_mins  = 0;
   tz_mins  = timezone_offset % 4;
@@ -1084,7 +1084,7 @@ void battery_layer_update_callback(Layer *me, GContext* ctx) {
 
 static void request_weather(void *data) {
   if (debug.general) { app_log(APP_LOG_LEVEL_DEBUG, __FILE__, __LINE__, "Requesting Weather [%d/%d]", weather.failures, weather.requests); }
-  strncpy(weather.condition, "h", sizeof(weather.condition)-1); // h = updating 'cloud' icon
+  weather.condition[0] = 'h'; weather.condition[1] = '\0'; // h = updating 'cloud' icon
   layer_mark_dirty(weather_layer); // update UI element to indicate we're fetching weather...
   DictionaryIterator *iter;
   AppMessageResult result = app_message_outbox_begin(&iter);
@@ -1271,6 +1271,7 @@ void generate_vibe(uint32_t vibe_pattern_number) {
       .durations = (uint32_t []) {200, 100, 200, 100, 200},
       .num_segments = 5
     } );
+    break;
   case 4: // Long
     vibes_long_pulse();
     break;
@@ -1677,7 +1678,7 @@ void in_weather_handler(DictionaryIterator *received, void *context) {
     Tuple *appkey     = dict_find(received, AK_WEATHER_TEMP);
     if (appkey != NULL)     { weather.current = appkey->value->int16; }
     appkey = dict_find(received, AK_WEATHER_COND);
-    if (appkey != NULL)     { strncpy(weather.condition, appkey->value->cstring, sizeof(weather.condition)-1); }
+    if (appkey != NULL)     { snprintf(weather.condition, sizeof(weather.condition), "%s", appkey->value->cstring); }
     layer_mark_dirty(weather_layer);
     if (debug.general) { app_log(APP_LOG_LEVEL_DEBUG, __FILE__, __LINE__, "Weather received [%d/%d]: %d, %s", weather.failures, weather.requests, weather.current, weather.condition); }
     if (weather.current == 999) {
