@@ -70,6 +70,10 @@ static int8_t seconds_shown = 0;
 static bool dnd_period_active = false;
 static bool vibe_period_active = false;
 static bool showing_statusbar = true;
+static int device_width = 144;
+static int device_height = 168;
+static int layout_slot_height = 72;
+static int stat_batt_left = 96;
 
 // define the persistent storage key(s)
 #define PK_SETTINGS      0
@@ -175,18 +179,9 @@ static bool showing_statusbar = true;
 #define AK_TRANS_ABBR_DECEMBER   542
 
 // primary coordinates
-#ifdef PBL_PLATFORM_EMERY
-#define DEVICE_WIDTH        200
-#define DEVICE_HEIGHT       228
-#else
-#define DEVICE_WIDTH        144
-#define DEVICE_HEIGHT       168
-#endif
 #define LAYOUT_STAT           0 // 20 tall
-#define LAYOUT_SLOT_TOP      24 // 72 tall
-#define LAYOUT_SLOT_BOT      96 // 72 tall, 4px gap above
-#define LAYOUT_SLOT_HEIGHT   72
-#define STAT_BATT_LEFT       96 // LEFT + WIDTH + NIB_WIDTH <= 143
+#define LAYOUT_SLOT_TOP      24 // status bar height; each slot gets (device_height - LAYOUT_SLOT_TOP) / 2
+// stat_batt_left computed at runtime: device_width - STAT_BATT_WIDTH - STAT_BATT_NIB_WIDTH - 1
 #define STAT_BATT_TOP         4
 #define STAT_BATT_WIDTH      44 // should be divisible by 10, after subtracting 4 (2 pixels/side for the 'border')
 #define STAT_BATT_HEIGHT     15
@@ -201,11 +196,6 @@ static bool showing_statusbar = true;
 #define REL_CLOCK_DATE_LEFT       2
 #define REL_CLOCK_DATE_TOP        0
 #define REL_CLOCK_DATE_HEIGHT    30 // date/time overlap, due to the way text is 'positioned'
-#ifdef PBL_PLATFORM_EMERY
-#define REL_CLOCK_DATE_WIDTH    196
-#else
-#define REL_CLOCK_DATE_WIDTH    140
-#endif
 #define REL_CLOCK_TIME_LEFT       0
 #define REL_CLOCK_TIME_TOP        7
 #define REL_CLOCK_TIME_HEIGHT    60 // date/time overlap, due to the way text is 'positioned'
@@ -399,8 +389,8 @@ void weather_layer_update_callback(Layer *me, GContext* ctx) {
 void splash_layer_update_callback(Layer *me, GContext* ctx) {
     (void)me; // 144x72
     setColors(ctx);
-    graphics_draw_text(ctx, "Timely", fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD), GRect(0,0,144,36), GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL); 
-    graphics_draw_text(ctx, CONFIG_VERSION, fonts_get_system_font(FONT_KEY_GOTHIC_28), GRect(0,32,144,36), GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL); 
+    graphics_draw_text(ctx, "Timely", fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD), GRect(0,0,device_width,36), GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
+    graphics_draw_text(ctx, CONFIG_VERSION, fonts_get_system_font(FONT_KEY_GOTHIC_28), GRect(0,32,device_width,36), GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
 }
 
 void calendar_layer_update_callback(Layer *me, GContext* ctx) {
@@ -506,10 +496,10 @@ void calendar_layer_update_callback(Layer *me, GContext* ctx) {
 // ---------------------------
 
     #define CAL_DAYS   7   // number of columns (days of the week)
-    #define CAL_WIDTH  20  // width of columns
     #define CAL_GAP    1   // gap around calendar
     #define CAL_LEFT   2   // left side of calendar
     #define CAL_HEIGHT 18  // How tall rows should be depends on how many weeks there are
+    int cal_width = (device_width - 2 * CAL_LEFT) / CAL_DAYS;
 
     int weeks  =  3;  // always display 3 weeks: # previous, current, # next
         
@@ -520,7 +510,7 @@ void calendar_layer_update_callback(Layer *me, GContext* ctx) {
     // generate a light background for the calendar grid
     if (settings.grid) {
       setInvColors(ctx);
-      graphics_fill_rect(ctx, GRect (CAL_LEFT + CAL_GAP, CAL_HEIGHT - CAL_GAP, DEVICE_WIDTH - 2 * (CAL_LEFT + CAL_GAP), CAL_HEIGHT * weeks), 0, GCornerNone);
+      graphics_fill_rect(ctx, GRect (CAL_LEFT + CAL_GAP, CAL_HEIGHT - CAL_GAP, device_width - 2 * (CAL_LEFT + CAL_GAP), CAL_HEIGHT * weeks), 0, GCornerNone);
       setColors(ctx);
     }
     for (int col = 0; col < CAL_DAYS; col++) {
@@ -538,11 +528,11 @@ void calendar_layer_update_callback(Layer *me, GContext* ctx) {
     //  graphics_fill_rect(ctx, GRect (CAL_WIDTH * col + CAL_LEFT + CAL_GAP, 0, CAL_WIDTH - CAL_GAP, CAL_HEIGHT - CAL_GAP), 0, GCornerNone);
 
       // draw the cell text
-      graphics_draw_text(ctx, lang_gen.abbrDaysOfWeek[weekday], current, GRect(CAL_WIDTH * col + CAL_LEFT + CAL_GAP, CAL_GAP + font_vert_offset, CAL_WIDTH, CAL_HEIGHT), GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL); 
+      graphics_draw_text(ctx, lang_gen.abbrDaysOfWeek[weekday], current, GRect(cal_width * col + CAL_LEFT + CAL_GAP, CAL_GAP + font_vert_offset, cal_width, CAL_HEIGHT), GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
       if (col == specialDay) {
         if (strcmp(lang_gen.language,"RU") == 0 ) {
           // we don't actually have a bold font for this, so we'll use font double-striking to simulate bold
-          graphics_draw_text(ctx, lang_gen.abbrDaysOfWeek[weekday], current, GRect(CAL_WIDTH * col + CAL_LEFT + CAL_GAP + 1, CAL_GAP + font_vert_offset, CAL_WIDTH, CAL_HEIGHT), GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL); 
+          graphics_draw_text(ctx, lang_gen.abbrDaysOfWeek[weekday], current, GRect(cal_width * col + CAL_LEFT + CAL_GAP + 1, CAL_GAP + font_vert_offset, cal_width, CAL_HEIGHT), GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
         }
         current = cal_normal;
         font_vert_offset = 0;
@@ -571,12 +561,12 @@ void calendar_layer_update_callback(Layer *me, GContext* ctx) {
         }
 
         // draw the cell background
-        graphics_fill_rect(ctx, GRect (CAL_WIDTH * col + CAL_LEFT + CAL_GAP, CAL_HEIGHT * week, CAL_WIDTH - CAL_GAP, CAL_HEIGHT - CAL_GAP), 0, GCornerNone);
+        graphics_fill_rect(ctx, GRect (cal_width * col + CAL_LEFT + CAL_GAP, CAL_HEIGHT * week, cal_width - CAL_GAP, CAL_HEIGHT - CAL_GAP), 0, GCornerNone);
 
         // draw the cell text
         char date_text[3];
         snprintf(date_text, sizeof(date_text), "%d", calendar[col + 7 * (row - 1)]);
-        graphics_draw_text(ctx, date_text, current, GRect(CAL_WIDTH * col + CAL_LEFT, CAL_HEIGHT * week - CAL_GAP + font_vert_offset, CAL_WIDTH, CAL_HEIGHT), GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL); 
+        graphics_draw_text(ctx, date_text, current, GRect(cal_width * col + CAL_LEFT, CAL_HEIGHT * week - CAL_GAP + font_vert_offset, cal_width, CAL_HEIGHT), GTextOverflowModeWordWrap, GTextAlignmentCenter, NULL);
 
         if ( row == specialRow && col == specialDay) {
           setColors(ctx);
@@ -931,7 +921,7 @@ void position_connection_layer() {
   } else { // Standard font
     connection_vert_offset = 0;
   }
-  layer_set_frame( text_layer_get_layer(text_connection_layer), GRect(20+STAT_BT_ICON_LEFT, connection_vert_offset, 72, 22) );
+  layer_set_frame( text_layer_get_layer(text_connection_layer), GRect(20+STAT_BT_ICON_LEFT, connection_vert_offset, stat_batt_left - (20 + STAT_BT_ICON_LEFT), 22) );
 }
 
 void position_date_layer() {
@@ -950,7 +940,7 @@ void position_date_layer() {
       date_vert_offset = -5;
     }
   }
-  layer_set_frame( text_layer_get_layer(date_layer), GRect(REL_CLOCK_DATE_LEFT, REL_CLOCK_DATE_TOP + date_vert_offset, REL_CLOCK_DATE_WIDTH, REL_CLOCK_DATE_HEIGHT) );
+  layer_set_frame( text_layer_get_layer(date_layer), GRect(REL_CLOCK_DATE_LEFT, REL_CLOCK_DATE_TOP + date_vert_offset, device_width - 4, REL_CLOCK_DATE_HEIGHT) );
 }
 
 void position_day_layer() {
@@ -961,7 +951,7 @@ void position_day_layer() {
   } else { // Standard font
     day_vert_offset = 0;
   }
-  layer_set_frame( text_layer_get_layer(day_layer), GRect(REL_CLOCK_DATE_LEFT, REL_CLOCK_SUBTEXT_TOP + day_vert_offset, REL_CLOCK_DATE_WIDTH, REL_CLOCK_DATE_HEIGHT) );
+  layer_set_frame( text_layer_get_layer(day_layer), GRect(REL_CLOCK_DATE_LEFT, REL_CLOCK_SUBTEXT_TOP + day_vert_offset, device_width - 4, REL_CLOCK_DATE_HEIGHT) );
 }
 
 void position_time_layer() {
@@ -975,8 +965,8 @@ void position_time_layer() {
     time_offset = 2;
     weather_offset = -10;
   }
-  layer_set_frame( text_layer_get_layer(time_layer), GRect(REL_CLOCK_TIME_LEFT, REL_CLOCK_TIME_TOP + time_offset, DEVICE_WIDTH, REL_CLOCK_TIME_HEIGHT) );
-  layer_set_frame( weather_layer, GRect(REL_CLOCK_TIME_LEFT, weather_offset, DEVICE_WIDTH, LAYOUT_SLOT_HEIGHT) );
+  layer_set_frame( text_layer_get_layer(time_layer), GRect(REL_CLOCK_TIME_LEFT, REL_CLOCK_TIME_TOP + time_offset, device_width, REL_CLOCK_TIME_HEIGHT) );
+  layer_set_frame( weather_layer, GRect(REL_CLOCK_TIME_LEFT, weather_offset, device_width, layout_slot_height) );
 }
 
 void update_datetime_subtext() {
@@ -1083,9 +1073,9 @@ void battery_layer_update_callback(Layer *me, GContext* ctx) {
 // simply draw the battery outline here - the text is a different layer, and we then 'fill' it with an inverterLayer
   setColors(ctx);
 // battery outline
-  graphics_draw_rect(ctx, GRect(STAT_BATT_LEFT, STAT_BATT_TOP, STAT_BATT_WIDTH, STAT_BATT_HEIGHT));
+  graphics_draw_rect(ctx, GRect(stat_batt_left, STAT_BATT_TOP, STAT_BATT_WIDTH, STAT_BATT_HEIGHT));
 // battery 'nib' terminal
-  graphics_draw_rect(ctx, GRect(STAT_BATT_LEFT + STAT_BATT_WIDTH - 1,
+  graphics_draw_rect(ctx, GRect(stat_batt_left + STAT_BATT_WIDTH - 1,
                                 STAT_BATT_TOP + (STAT_BATT_HEIGHT - STAT_BATT_NIB_HEIGHT)/2,
                                 STAT_BATT_NIB_WIDTH,
                                 STAT_BATT_NIB_HEIGHT));
@@ -1243,7 +1233,7 @@ static void handle_battery(BatteryChargeState charge_state) {
   battery_plugged = charge_state.is_plugged;
 
   // fill it in with current power
-  layer_set_frame(effect_layer_get_layer(battery_meter_layer), GRect(STAT_BATT_LEFT+2, STAT_BATT_TOP+2, battery_meter, STAT_BATT_HEIGHT-4));
+  layer_set_frame(effect_layer_get_layer(battery_meter_layer), GRect(stat_batt_left+2, STAT_BATT_TOP+2, battery_meter, STAT_BATT_HEIGHT-4));
   layer_set_hidden(effect_layer_get_layer(battery_meter_layer), false);
 
   //if (debug.general) { app_log(APP_LOG_LEVEL_DEBUG, __FILE__, __LINE__, "battery reading"); }
@@ -1415,23 +1405,27 @@ static void window_load(Window *window) {
 
   Layer *window_layer = window_get_root_layer(window);
   GRect bounds = layer_get_bounds(window_layer);
+  device_width       = bounds.size.w;
+  device_height      = bounds.size.h;
+  layout_slot_height = (device_height - LAYOUT_SLOT_TOP) / 2;
+  int layout_slot_bot = LAYOUT_SLOT_TOP + layout_slot_height;
+  stat_batt_left     = device_width - STAT_BATT_WIDTH - STAT_BATT_NIB_WIDTH - 1;
 
-  slot_status = layer_create(GRect(0,LAYOUT_STAT,DEVICE_WIDTH,LAYOUT_SLOT_TOP));
-  //slot_status = layer_create(GRect(0,0,DEVICE_WIDTH,DEVICE_HEIGHT));
+  slot_status = layer_create(GRect(0,LAYOUT_STAT,device_width,LAYOUT_SLOT_TOP));
   layer_set_update_proc(slot_status, slot_status_layer_update_callback);
   layer_add_child(window_layer, slot_status);
 
-  statusbar = layer_create(GRect(0,LAYOUT_STAT,DEVICE_WIDTH,LAYOUT_SLOT_TOP));
+  statusbar = layer_create(GRect(0,LAYOUT_STAT,device_width,LAYOUT_SLOT_TOP));
   layer_set_update_proc(statusbar, statusbar_layer_update_callback);
   layer_add_child(slot_status, statusbar);
   GRect stat_bounds = layer_get_bounds(statusbar);
 
-  slot_top = layer_create(GRect(0,LAYOUT_SLOT_TOP,DEVICE_WIDTH,LAYOUT_SLOT_HEIGHT));
+  slot_top = layer_create(GRect(0,LAYOUT_SLOT_TOP,device_width,layout_slot_height));
   layer_set_update_proc(slot_top, slot_top_layer_update_callback);
   layer_add_child(window_layer, slot_top);
   GRect slot_top_bounds = layer_get_bounds(slot_top);
 
-  slot_bot = layer_create(GRect(0,LAYOUT_SLOT_BOT,DEVICE_WIDTH,LAYOUT_SLOT_HEIGHT));
+  slot_bot = layer_create(GRect(0,layout_slot_bot,device_width,layout_slot_height));
   layer_set_update_proc(slot_bot, slot_bot_layer_update_callback);
   layer_add_child(window_layer, slot_bot);
   GRect slot_bot_bounds = layer_get_bounds(slot_bot);
@@ -1471,7 +1465,7 @@ static void window_load(Window *window) {
   toggle_slot_bottom((void*)splash_layer);  // show @ start...
   bottom_toggle = app_timer_register(2000, &toggle_slot_bottom, (void*)calendar_layer); // queue calendar to reappear in 2 seconds
 
-  date_layer = text_layer_create( GRect(REL_CLOCK_DATE_LEFT, REL_CLOCK_DATE_TOP, REL_CLOCK_DATE_WIDTH, REL_CLOCK_DATE_HEIGHT) ); // see position_date_layer()
+  date_layer = text_layer_create( GRect(REL_CLOCK_DATE_LEFT, REL_CLOCK_DATE_TOP, device_width - 4, REL_CLOCK_DATE_HEIGHT) ); // see position_date_layer()
   set_layer_attr_sfont(date_layer, FONT_KEY_GOTHIC_24, GTextAlignmentCenter);
   position_date_layer(); // depends on font/language
   update_date_text();
@@ -1481,21 +1475,21 @@ static void window_load(Window *window) {
   layer_set_update_proc(weather_layer, weather_layer_update_callback);
   layer_add_child(datetime_layer, weather_layer);
 
-  time_layer = text_layer_create( GRect(REL_CLOCK_TIME_LEFT, REL_CLOCK_TIME_TOP, DEVICE_WIDTH - 2, REL_CLOCK_TIME_HEIGHT) ); // see position_time_layer()
+  time_layer = text_layer_create( GRect(REL_CLOCK_TIME_LEFT, REL_CLOCK_TIME_TOP, device_width - 2, REL_CLOCK_TIME_HEIGHT) ); // see position_time_layer()
   set_layer_attr_cfont(time_layer, RESOURCE_ID_FONT_FUTURA_CONDENSED_48, GTextAlignmentCenter);
   toggle_weather();
   position_time_layer(); // make use of our whitespace, if we have it...
   update_time_text();
   layer_add_child(datetime_layer, text_layer_get_layer(time_layer));
 
-  week_layer = text_layer_create( GRect(4, REL_CLOCK_SUBTEXT_TOP, 140, 18) );
+  week_layer = text_layer_create( GRect(4, REL_CLOCK_SUBTEXT_TOP, device_width - 4, 18) );
   set_layer_attr_sfont(week_layer, FONT_KEY_GOTHIC_14, GTextAlignmentLeft);
   layer_add_child(datetime_layer, text_layer_get_layer(week_layer));
   if ( settings.show_week == 0 ) {
     layer_set_hidden(text_layer_get_layer(week_layer), true);
   }
 
-  day_layer = text_layer_create( GRect(4, REL_CLOCK_SUBTEXT_TOP, REL_CLOCK_DATE_WIDTH, 18) ); // see position_day_layer()
+  day_layer = text_layer_create( GRect(4, REL_CLOCK_SUBTEXT_TOP, device_width - 4, 18) ); // see position_day_layer()
   set_layer_attr_sfont(day_layer, FONT_KEY_GOTHIC_14, GTextAlignmentCenter);
   position_day_layer(); // depends on font/language
   layer_add_child(datetime_layer, text_layer_get_layer(day_layer));
@@ -1503,7 +1497,7 @@ static void window_load(Window *window) {
     layer_set_hidden(text_layer_get_layer(day_layer), true);
   }
 
-  ampm_layer = text_layer_create( GRect(0, REL_CLOCK_SUBTEXT_TOP, 140, 18) );
+  ampm_layer = text_layer_create( GRect(0, REL_CLOCK_SUBTEXT_TOP, device_width, 18) );
   set_layer_attr_sfont(ampm_layer, FONT_KEY_GOTHIC_14, GTextAlignmentRight);
   layer_add_child(datetime_layer, text_layer_get_layer(ampm_layer));
   if ( settings.show_am_pm == 0 ) {
@@ -1512,13 +1506,13 @@ static void window_load(Window *window) {
 
   update_datetime_subtext();
 
-  text_connection_layer = text_layer_create( GRect(20+STAT_BT_ICON_LEFT, 0, 72, 22) ); // see position_connection_layer()
+  text_connection_layer = text_layer_create( GRect(20+STAT_BT_ICON_LEFT, 0, stat_batt_left - (20 + STAT_BT_ICON_LEFT), 22) ); // see position_connection_layer()
   set_layer_attr_sfont(text_connection_layer, FONT_KEY_GOTHIC_18, GTextAlignmentLeft);
   update_connection();
   position_connection_layer(); // depends on font/language
   layer_add_child(statusbar, text_layer_get_layer(text_connection_layer));
 
-  text_battery_layer = text_layer_create( GRect(STAT_BATT_LEFT, STAT_BATT_TOP-2, STAT_BATT_WIDTH, STAT_BATT_HEIGHT) );
+  text_battery_layer = text_layer_create( GRect(stat_batt_left, STAT_BATT_TOP-2, STAT_BATT_WIDTH, STAT_BATT_HEIGHT) );
   set_layer_attr_sfont(text_battery_layer, FONT_KEY_GOTHIC_14, GTextAlignmentCenter);
   text_layer_set_text(text_battery_layer, "-");
 

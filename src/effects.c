@@ -1,6 +1,14 @@
 #include <pebble.h>
 #include "effects.h"
 #include "math.h"
+
+#ifdef PBL_PLATFORM_EMERY
+#define DISPLAY_WIDTH  200
+#define DISPLAY_HEIGHT 228
+#else
+#define DISPLAY_WIDTH  144
+#define DISPLAY_HEIGHT 168
+#endif
   
   
 // { ********* Graphics utility functions (probablu should be seaparated into anothe file?) *********
@@ -47,7 +55,7 @@ void set_line(uint8_t *bitmap_data, int bytes_per_row, int y, int x, int y2, int
 			longLen+=y;
 			for (int j=0x80+(x<<8);y<=longLen;++y) {
         temp_y = y; temp_x = j >> 8;
-        if (temp_y >=0 && temp_y<168 && temp_x >=0 && temp_x < 144) {
+        if (temp_y >=0 && temp_y<DISPLAY_HEIGHT && temp_x >=0 && temp_x < DISPLAY_WIDTH) {
           temp_pixel = get_pixel(bitmap_data, bytes_per_row,  temp_y, temp_x);
           #ifdef PBL_COLOR // for Basalt drawing pixel if it is not of original color or already drawn color
             if (temp_pixel != skip_color && temp_pixel != draw_color) set_pixel(bitmap_data, bytes_per_row, temp_y, temp_x, draw_color);
@@ -444,7 +452,7 @@ void effect_outline(GContext* ctx, GRect position, void* param) {
          
           for (int i = 0; i < 4; i++) {
             // TODO: centralize the constants
-            if (outlinex[i] >= 0 && outlinex[i] <=144 && outliney[i] >= 0 && outliney[i] <= 168) {
+            if (outlinex[i] >= 0 && outlinex[i] <=DISPLAY_WIDTH && outliney[i] >= 0 && outliney[i] <= DISPLAY_HEIGHT) {
               temp_pixel = (GColor)get_pixel(bitmap_data, bytes_per_row, outliney[i], outlinex[i]);
               if (!gcolor_equal(temp_pixel, outline->orig_color)) {
                 #ifdef PBL_COLOR
