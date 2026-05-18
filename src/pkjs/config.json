@@ -1,0 +1,422 @@
+[
+  {
+    "type": "section",
+    "items": [
+      {
+        "type": "heading",
+        "defaultValue": "General"
+      },
+      {
+        "type": "select",
+        "messageKey": "language",
+        "label": "Language",
+        "defaultValue": "EN",
+        "options": [
+          { "label": "English",    "value": "EN" },
+          { "label": "Danish",     "value": "DA" },
+          { "label": "Dutch",      "value": "NL" },
+          { "label": "Finnish",    "value": "FI" },
+          { "label": "French",     "value": "FR" },
+          { "label": "German",     "value": "DE" },
+          { "label": "Italian",    "value": "IT" },
+          { "label": "Norwegian",  "value": "NO" },
+          { "label": "Portuguese", "value": "PT" },
+          { "label": "Russian",    "value": "RU" },
+          { "label": "Spanish",    "value": "ES" },
+          { "label": "Swedish",    "value": "SV" }
+        ]
+      },
+      {
+        "type": "select",
+        "messageKey": "style_inv",
+        "label": "Theme",
+        "defaultValue": "0",
+        "options": [
+          { "label": "Dark", "value": "0" },
+          { "label": "Light", "value": "1" }
+        ]
+      },
+      {
+        "type": "select",
+        "messageKey": "vibe_hour",
+        "label": "Hourly Vibration",
+        "defaultValue": "0",
+        "options": [
+          { "label": "None",  "value": "0" },
+          { "label": "1x",    "value": "1" },
+          { "label": "2x",    "value": "2" },
+          { "label": "3x",    "value": "3" },
+          { "label": "Long",  "value": "4" },
+          { "label": "Min",   "value": "5" },
+          { "label": "Min 2", "value": "6" },
+          { "label": "Ow",    "value": "7" }
+        ]
+      },
+      {
+        "type": "select",
+        "messageKey": "vibe_pat_disconnect",
+        "label": "Disconnect Vibration",
+        "defaultValue": "2",
+        "options": [
+          { "label": "None",  "value": "0" },
+          { "label": "1x",    "value": "1" },
+          { "label": "2x",    "value": "2" },
+          { "label": "3x",    "value": "3" },
+          { "label": "Long",  "value": "4" },
+          { "label": "Min",   "value": "5" },
+          { "label": "Min 2", "value": "6" },
+          { "label": "Ow",    "value": "7" }
+        ]
+      },
+      {
+        "type": "select",
+        "messageKey": "vibe_pat_connect",
+        "label": "Connect Vibration",
+        "defaultValue": "0",
+        "options": [
+          { "label": "None",  "value": "0" },
+          { "label": "1x",    "value": "1" },
+          { "label": "2x",    "value": "2" },
+          { "label": "3x",    "value": "3" },
+          { "label": "Long",  "value": "4" },
+          { "label": "Min",   "value": "5" },
+          { "label": "Min 2", "value": "6" },
+          { "label": "Ow",    "value": "7" }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "section",
+    "items": [
+      {
+        "type": "heading",
+        "defaultValue": "Clock"
+      },
+      {
+        "type": "select",
+        "messageKey": "intl_fmt_date",
+        "label": "Date Format",
+        "defaultValue": "0",
+        "options": [
+          { "label": "MMMM DD, YYYY", "value": "0" },
+          { "label": "DD.MM.YYYY",    "value": "1" }
+        ]
+      },
+      {
+        "type": "select",
+        "messageKey": "style_week",
+        "label": "Below Time, Left",
+        "defaultValue": "0",
+        "options": [
+          { "label": "-",     "value": "0" },
+          { "label": "Week",  "value": "1" },
+          { "label": "TZ",    "value": "2" },
+          { "label": "AM/PM", "value": "3" }
+        ]
+      },
+      {
+        "type": "select",
+        "messageKey": "style_day",
+        "label": "Below Time, Middle",
+        "defaultValue": "0",
+        "options": [
+          { "label": "-",     "value": "0" },
+          { "label": "Day",   "value": "1" },
+          { "label": "Mon",   "value": "2" },
+          { "label": "TZ",    "value": "3" },
+          { "label": "Week",  "value": "4" },
+          { "label": "AM/PM", "value": "5" }
+        ]
+      },
+      {
+        "type": "select",
+        "messageKey": "style_am_pm",
+        "label": "Below Time, Right",
+        "defaultValue": "0",
+        "options": [
+          { "label": "-",     "value": "0" },
+          { "label": "AM/PM", "value": "1" },
+          { "label": "TZ",    "value": "2" },
+          { "label": "Week",  "value": "3" }
+        ]
+      },
+      {
+        "type": "select",
+        "messageKey": "intl_fmt_week",
+        "label": "Week Format",
+        "defaultValue": "0",
+        "options": [
+          { "label": "ISO 8601",       "value": "0" },
+          { "label": "Sun 1st of W1", "value": "1" },
+          { "label": "Mon 1st of W1", "value": "2" }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "section",
+    "items": [
+      {
+        "type": "heading",
+        "defaultValue": "Calendar"
+      },
+      {
+        "type": "toggle",
+        "messageKey": "style_day_inv",
+        "label": "Invert Today",
+        "defaultValue": true
+      },
+      {
+        "type": "toggle",
+        "messageKey": "style_grid",
+        "label": "Grid",
+        "defaultValue": true
+      },
+      {
+        "type": "select",
+        "messageKey": "intl_dowo",
+        "label": "Start of Week",
+        "defaultValue": "0",
+        "options": [
+          { "label": "Su", "value": "0" },
+          { "label": "Mo", "value": "1" },
+          { "label": "Tu", "value": "2" },
+          { "label": "We", "value": "3" },
+          { "label": "Th", "value": "4" },
+          { "label": "Fr", "value": "5" },
+          { "label": "Sa", "value": "6" }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "section",
+    "items": [
+      {
+        "type": "heading",
+        "defaultValue": "Translations"
+      },
+      {
+        "type": "heading",
+        "defaultValue": "Status",
+        "size": 4
+      },
+      {
+        "type": "input",
+        "messageKey": "trans_connected",
+        "label": "Connected",
+        "defaultValue": "Linked",
+        "attributes": { "maxlength": 9 }
+      },
+      {
+        "type": "input",
+        "messageKey": "trans_disconnected",
+        "label": "Disconnected",
+        "defaultValue": "No Link",
+        "attributes": { "maxlength": 9 }
+      },
+      {
+        "type": "heading",
+        "defaultValue": "Days of Week (abbreviated)",
+        "size": 4
+      },
+      {
+        "type": "input",
+        "messageKey": "trans_abbr_sunday",
+        "label": "Sunday",
+        "defaultValue": "Su",
+        "attributes": { "maxlength": 2 }
+      },
+      {
+        "type": "input",
+        "messageKey": "trans_abbr_monday",
+        "label": "Monday",
+        "defaultValue": "Mo",
+        "attributes": { "maxlength": 2 }
+      },
+      {
+        "type": "input",
+        "messageKey": "trans_abbr_tuesday",
+        "label": "Tuesday",
+        "defaultValue": "Tu",
+        "attributes": { "maxlength": 2 }
+      },
+      {
+        "type": "input",
+        "messageKey": "trans_abbr_wedsday",
+        "label": "Wednesday",
+        "defaultValue": "We",
+        "attributes": { "maxlength": 2 }
+      },
+      {
+        "type": "input",
+        "messageKey": "trans_abbr_thursday",
+        "label": "Thursday",
+        "defaultValue": "Th",
+        "attributes": { "maxlength": 2 }
+      },
+      {
+        "type": "input",
+        "messageKey": "trans_abbr_friday",
+        "label": "Friday",
+        "defaultValue": "Fr",
+        "attributes": { "maxlength": 2 }
+      },
+      {
+        "type": "input",
+        "messageKey": "trans_abbr_saturday",
+        "label": "Saturday",
+        "defaultValue": "Sa",
+        "attributes": { "maxlength": 2 }
+      },
+      {
+        "type": "heading",
+        "defaultValue": "Months",
+        "size": 4
+      },
+      {
+        "type": "input",
+        "messageKey": "trans_january",
+        "label": "January",
+        "defaultValue": "January",
+        "attributes": { "maxlength": 11 }
+      },
+      {
+        "type": "input",
+        "messageKey": "trans_february",
+        "label": "February",
+        "defaultValue": "February",
+        "attributes": { "maxlength": 11 }
+      },
+      {
+        "type": "input",
+        "messageKey": "trans_march",
+        "label": "March",
+        "defaultValue": "March",
+        "attributes": { "maxlength": 11 }
+      },
+      {
+        "type": "input",
+        "messageKey": "trans_april",
+        "label": "April",
+        "defaultValue": "April",
+        "attributes": { "maxlength": 11 }
+      },
+      {
+        "type": "input",
+        "messageKey": "trans_may",
+        "label": "May",
+        "defaultValue": "May",
+        "attributes": { "maxlength": 11 }
+      },
+      {
+        "type": "input",
+        "messageKey": "trans_june",
+        "label": "June",
+        "defaultValue": "June",
+        "attributes": { "maxlength": 11 }
+      },
+      {
+        "type": "input",
+        "messageKey": "trans_july",
+        "label": "July",
+        "defaultValue": "July",
+        "attributes": { "maxlength": 11 }
+      },
+      {
+        "type": "input",
+        "messageKey": "trans_august",
+        "label": "August",
+        "defaultValue": "August",
+        "attributes": { "maxlength": 11 }
+      },
+      {
+        "type": "input",
+        "messageKey": "trans_september",
+        "label": "September",
+        "defaultValue": "September",
+        "attributes": { "maxlength": 11 }
+      },
+      {
+        "type": "input",
+        "messageKey": "trans_october",
+        "label": "October",
+        "defaultValue": "October",
+        "attributes": { "maxlength": 11 }
+      },
+      {
+        "type": "input",
+        "messageKey": "trans_november",
+        "label": "November",
+        "defaultValue": "November",
+        "attributes": { "maxlength": 11 }
+      },
+      {
+        "type": "input",
+        "messageKey": "trans_december",
+        "label": "December",
+        "defaultValue": "December",
+        "attributes": { "maxlength": 11 }
+      },
+      {
+        "type": "heading",
+        "defaultValue": "Days of Week",
+        "size": 4
+      },
+      {
+        "type": "input",
+        "messageKey": "trans_sunday",
+        "label": "Sunday",
+        "defaultValue": "Sunday",
+        "attributes": { "maxlength": 11 }
+      },
+      {
+        "type": "input",
+        "messageKey": "trans_monday",
+        "label": "Monday",
+        "defaultValue": "Monday",
+        "attributes": { "maxlength": 11 }
+      },
+      {
+        "type": "input",
+        "messageKey": "trans_tuesday",
+        "label": "Tuesday",
+        "defaultValue": "Tuesday",
+        "attributes": { "maxlength": 11 }
+      },
+      {
+        "type": "input",
+        "messageKey": "trans_wedsday",
+        "label": "Wednesday",
+        "defaultValue": "Wednesday",
+        "attributes": { "maxlength": 11 }
+      },
+      {
+        "type": "input",
+        "messageKey": "trans_thursday",
+        "label": "Thursday",
+        "defaultValue": "Thursday",
+        "attributes": { "maxlength": 11 }
+      },
+      {
+        "type": "input",
+        "messageKey": "trans_friday",
+        "label": "Friday",
+        "defaultValue": "Friday",
+        "attributes": { "maxlength": 11 }
+      },
+      {
+        "type": "input",
+        "messageKey": "trans_saturday",
+        "label": "Saturday",
+        "defaultValue": "Saturday",
+        "attributes": { "maxlength": 11 }
+      }
+    ]
+  },
+  {
+    "type": "submit",
+    "defaultValue": "Save Settings"
+  }
+]

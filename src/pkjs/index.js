@@ -1,3 +1,184 @@
+var Clay = require('@rebble/clay');
+var clayConfig = require('./config.json');
+
+// Runs inside the webview — no require() available; translations must be inline.
+var customClay = function() {
+    var self = this;
+
+    var translations = {
+        EN: {
+            trans_connected: 'Linked',        trans_disconnected: 'No Link',
+            trans_abbr_sunday: 'Su',  trans_abbr_monday: 'Mo',  trans_abbr_tuesday: 'Tu',
+            trans_abbr_wedsday: 'We', trans_abbr_thursday: 'Th', trans_abbr_friday: 'Fr',
+            trans_abbr_saturday: 'Sa',
+            trans_january: 'January',   trans_february: 'February',  trans_march: 'March',
+            trans_april: 'April',       trans_may: 'May',            trans_june: 'June',
+            trans_july: 'July',         trans_august: 'August',      trans_september: 'September',
+            trans_october: 'October',   trans_november: 'November',  trans_december: 'December',
+            trans_sunday: 'Sunday',     trans_monday: 'Monday',      trans_tuesday: 'Tuesday',
+            trans_wedsday: 'Wednesday', trans_thursday: 'Thursday',  trans_friday: 'Friday',
+            trans_saturday: 'Saturday'
+        },
+        DA: {
+            trans_connected: 'Forbundet',     trans_disconnected: 'Afbrudt',
+            trans_abbr_sunday: 'Sø', trans_abbr_monday: 'Ma',  trans_abbr_tuesday: 'Ti',
+            trans_abbr_wedsday: 'On', trans_abbr_thursday: 'To', trans_abbr_friday: 'Fr',
+            trans_abbr_saturday: 'Lø',
+            trans_january: 'Januar',    trans_february: 'Februar',   trans_march: 'Marts',
+            trans_april: 'April',       trans_may: 'Maj',            trans_june: 'Juni',
+            trans_july: 'Juli',         trans_august: 'August',      trans_september: 'September',
+            trans_october: 'Oktober',   trans_november: 'November',  trans_december: 'December',
+            trans_sunday: 'Søndag',     trans_monday: 'Mandag',      trans_tuesday: 'Tirsdag',
+            trans_wedsday: 'Onsdag',    trans_thursday: 'Torsdag',   trans_friday: 'Fredag',
+            trans_saturday: 'Lørdag'
+        },
+        NL: {
+            trans_connected: 'Verbonden',     trans_disconnected: 'Geen link',
+            trans_abbr_sunday: 'Zo', trans_abbr_monday: 'Ma',  trans_abbr_tuesday: 'Di',
+            trans_abbr_wedsday: 'Wo', trans_abbr_thursday: 'Do', trans_abbr_friday: 'Vr',
+            trans_abbr_saturday: 'Za',
+            trans_january: 'Januari',   trans_february: 'Februari',  trans_march: 'Maart',
+            trans_april: 'April',       trans_may: 'Mei',            trans_june: 'Juni',
+            trans_july: 'Juli',         trans_august: 'Augustus',    trans_september: 'September',
+            trans_october: 'Oktober',   trans_november: 'November',  trans_december: 'December',
+            trans_sunday: 'Zondag',     trans_monday: 'Maandag',     trans_tuesday: 'Dinsdag',
+            trans_wedsday: 'Woensdag',  trans_thursday: 'Donderdag', trans_friday: 'Vrijdag',
+            trans_saturday: 'Zaterdag'
+        },
+        FI: {
+            trans_connected: 'Kytketty',      trans_disconnected: 'Katkaistu',
+            trans_abbr_sunday: 'Su', trans_abbr_monday: 'Ma',  trans_abbr_tuesday: 'Ti',
+            trans_abbr_wedsday: 'Ke', trans_abbr_thursday: 'To', trans_abbr_friday: 'Pe',
+            trans_abbr_saturday: 'La',
+            trans_january: 'Tammikuu',  trans_february: 'Helmikuu',  trans_march: 'Maaliskuu',
+            trans_april: 'Huhtikuu',    trans_may: 'Toukokuu',       trans_june: 'Kesäkuu',
+            trans_july: 'Heinäkuu',     trans_august: 'Elokuu',      trans_september: 'Syyskuu',
+            trans_october: 'Lokakuu',   trans_november: 'Marraskuu', trans_december: 'Joulukuu',
+            trans_sunday: 'Sunnuntai',  trans_monday: 'Maanantai',   trans_tuesday: 'Tiistai',
+            trans_wedsday: 'Keskiviikko', trans_thursday: 'Torstai', trans_friday: 'Perjantai',
+            trans_saturday: 'Lauantai'
+        },
+        FR: {
+            trans_connected: 'Connecté',      trans_disconnected: 'Sans lien',
+            trans_abbr_sunday: 'Di', trans_abbr_monday: 'Lu',  trans_abbr_tuesday: 'Ma',
+            trans_abbr_wedsday: 'Me', trans_abbr_thursday: 'Je', trans_abbr_friday: 'Ve',
+            trans_abbr_saturday: 'Sa',
+            trans_january: 'Janvier',   trans_february: 'Février',   trans_march: 'Mars',
+            trans_april: 'Avril',       trans_may: 'Mai',            trans_june: 'Juin',
+            trans_july: 'Juillet',      trans_august: 'Août',        trans_september: 'Septembre',
+            trans_october: 'Octobre',   trans_november: 'Novembre',  trans_december: 'Décembre',
+            trans_sunday: 'Dimanche',   trans_monday: 'Lundi',       trans_tuesday: 'Mardi',
+            trans_wedsday: 'Mercredi',  trans_thursday: 'Jeudi',     trans_friday: 'Vendredi',
+            trans_saturday: 'Samedi'
+        },
+        DE: {
+            trans_connected: 'Verbunden',     trans_disconnected: 'Getrennt',
+            trans_abbr_sunday: 'So', trans_abbr_monday: 'Mo',  trans_abbr_tuesday: 'Di',
+            trans_abbr_wedsday: 'Mi', trans_abbr_thursday: 'Do', trans_abbr_friday: 'Fr',
+            trans_abbr_saturday: 'Sa',
+            trans_january: 'Januar',    trans_february: 'Februar',   trans_march: 'März',
+            trans_april: 'April',       trans_may: 'Mai',            trans_june: 'Juni',
+            trans_july: 'Juli',         trans_august: 'August',      trans_september: 'September',
+            trans_october: 'Oktober',   trans_november: 'November',  trans_december: 'Dezember',
+            trans_sunday: 'Sonntag',    trans_monday: 'Montag',      trans_tuesday: 'Dienstag',
+            trans_wedsday: 'Mittwoch',  trans_thursday: 'Donnerstag', trans_friday: 'Freitag',
+            trans_saturday: 'Samstag'
+        },
+        IT: {
+            trans_connected: 'Connesso',      trans_disconnected: 'Sconnesso',
+            trans_abbr_sunday: 'Do', trans_abbr_monday: 'Lu',  trans_abbr_tuesday: 'Ma',
+            trans_abbr_wedsday: 'Me', trans_abbr_thursday: 'Gi', trans_abbr_friday: 'Ve',
+            trans_abbr_saturday: 'Sa',
+            trans_january: 'Gennaio',   trans_february: 'Febbraio',  trans_march: 'Marzo',
+            trans_april: 'Aprile',      trans_may: 'Maggio',         trans_june: 'Giugno',
+            trans_july: 'Luglio',       trans_august: 'Agosto',      trans_september: 'Settembre',
+            trans_october: 'Ottobre',   trans_november: 'Novembre',  trans_december: 'Dicembre',
+            trans_sunday: 'Domenica',   trans_monday: 'Lunedì',      trans_tuesday: 'Martedì',
+            trans_wedsday: 'Mercoledì', trans_thursday: 'Giovedì',   trans_friday: 'Venerdì',
+            trans_saturday: 'Sabato'
+        },
+        NO: {
+            trans_connected: 'Tilkoblet',     trans_disconnected: 'Frakoblet',
+            trans_abbr_sunday: 'Sø', trans_abbr_monday: 'Ma',  trans_abbr_tuesday: 'Ti',
+            trans_abbr_wedsday: 'On', trans_abbr_thursday: 'To', trans_abbr_friday: 'Fr',
+            trans_abbr_saturday: 'Lø',
+            trans_january: 'Januar',    trans_february: 'Februar',   trans_march: 'Mars',
+            trans_april: 'April',       trans_may: 'Mai',            trans_june: 'Juni',
+            trans_july: 'Juli',         trans_august: 'August',      trans_september: 'September',
+            trans_october: 'Oktober',   trans_november: 'November',  trans_december: 'Desember',
+            trans_sunday: 'Søndag',     trans_monday: 'Mandag',      trans_tuesday: 'Tirsdag',
+            trans_wedsday: 'Onsdag',    trans_thursday: 'Torsdag',   trans_friday: 'Fredag',
+            trans_saturday: 'Lørdag'
+        },
+        PT: {
+            trans_connected: 'Conectado',     trans_disconnected: 'Sem link',
+            trans_abbr_sunday: 'Do', trans_abbr_monday: 'Sg',  trans_abbr_tuesday: 'Te',
+            trans_abbr_wedsday: 'Qr', trans_abbr_thursday: 'Qi', trans_abbr_friday: 'Sx',
+            trans_abbr_saturday: 'Sb',
+            trans_january: 'Janeiro',   trans_february: 'Fevereiro', trans_march: 'Março',
+            trans_april: 'Abril',       trans_may: 'Maio',           trans_june: 'Junho',
+            trans_july: 'Julho',        trans_august: 'Agosto',      trans_september: 'Setembro',
+            trans_october: 'Outubro',   trans_november: 'Novembro',  trans_december: 'Dezembro',
+            trans_sunday: 'Domingo',    trans_monday: 'Segunda',     trans_tuesday: 'Terça',
+            trans_wedsday: 'Quarta',    trans_thursday: 'Quinta',    trans_friday: 'Sexta',
+            trans_saturday: 'Sábado'
+        },
+        RU: {
+            trans_connected: 'Связан',        trans_disconnected: 'Отключен',
+            trans_abbr_sunday: 'Вс', trans_abbr_monday: 'Пн',  trans_abbr_tuesday: 'Вт',
+            trans_abbr_wedsday: 'Ср', trans_abbr_thursday: 'Чт', trans_abbr_friday: 'Пт',
+            trans_abbr_saturday: 'Сб',
+            trans_january: 'Январь',    trans_february: 'Февраль',   trans_march: 'Март',
+            trans_april: 'Апрель',      trans_may: 'Май',            trans_june: 'Июнь',
+            trans_july: 'Июль',         trans_august: 'Август',      trans_september: 'Сентябрь',
+            trans_october: 'Октябрь',   trans_november: 'Ноябрь',   trans_december: 'Декабрь',
+            trans_sunday: 'Воскресенье', trans_monday: 'Понедельник', trans_tuesday: 'Вторник',
+            trans_wedsday: 'Среда',     trans_thursday: 'Четверг',   trans_friday: 'Пятница',
+            trans_saturday: 'Суббота'
+        },
+        ES: {
+            trans_connected: 'Conectado',     trans_disconnected: 'Sin link',
+            trans_abbr_sunday: 'Do', trans_abbr_monday: 'Lu',  trans_abbr_tuesday: 'Ma',
+            trans_abbr_wedsday: 'Mi', trans_abbr_thursday: 'Ju', trans_abbr_friday: 'Vi',
+            trans_abbr_saturday: 'Sa',
+            trans_january: 'Enero',     trans_february: 'Febrero',   trans_march: 'Marzo',
+            trans_april: 'Abril',       trans_may: 'Mayo',           trans_june: 'Junio',
+            trans_july: 'Julio',        trans_august: 'Agosto',      trans_september: 'Septiembre',
+            trans_october: 'Octubre',   trans_november: 'Noviembre', trans_december: 'Diciembre',
+            trans_sunday: 'Domingo',    trans_monday: 'Lunes',       trans_tuesday: 'Martes',
+            trans_wedsday: 'Miércoles', trans_thursday: 'Jueves',    trans_friday: 'Viernes',
+            trans_saturday: 'Sábado'
+        },
+        SV: {
+            trans_connected: 'Ansluten',      trans_disconnected: 'Frånkoppl',
+            trans_abbr_sunday: 'Sö', trans_abbr_monday: 'Må',  trans_abbr_tuesday: 'Ti',
+            trans_abbr_wedsday: 'On', trans_abbr_thursday: 'To', trans_abbr_friday: 'Fr',
+            trans_abbr_saturday: 'Lö',
+            trans_january: 'Januari',   trans_february: 'Februari',  trans_march: 'Mars',
+            trans_april: 'April',       trans_may: 'Maj',            trans_june: 'Juni',
+            trans_july: 'Juli',         trans_august: 'Augusti',     trans_september: 'September',
+            trans_october: 'Oktober',   trans_november: 'November',  trans_december: 'December',
+            trans_sunday: 'Söndag',     trans_monday: 'Måndag',      trans_tuesday: 'Tisdag',
+            trans_wedsday: 'Onsdag',    trans_thursday: 'Torsdag',   trans_friday: 'Fredag',
+            trans_saturday: 'Lördag'
+        }
+    };
+
+    var langItem = self.getItemByMessageKey('language');
+
+    langItem.on('change', function() {
+        var lang = langItem.get();
+        var t = translations[lang];
+        if (!t) { return; }
+        Object.keys(t).forEach(function(key) {
+            var item = self.getItemByMessageKey(key);
+            if (item) { item.set(t[key]); }
+        });
+    });
+};
+
+var clay = new Clay(clayConfig, customClay, { autoHandleEvents: false });
+
 var CLIMACON = {
   'cloud'            : '!',
   'cloud_day'        : '"',
@@ -144,7 +325,7 @@ var OWMclimacon= {
   903 : CLIMACON['temp_low'], // cold
   904 : CLIMACON['temp_high'], // hot
   905 : CLIMACON['wind'], // windy
-  906 : CLIMACON['hail'], // hail 
+  906 : CLIMACON['hail'], // hail
 // Additional
   950 : CLIMACON['set'], // Setting
   951 : CLIMACON['sun'], // Calm
@@ -158,7 +339,7 @@ var OWMclimacon= {
   959 : CLIMACON['wind'], // Severe Gale
   960 : CLIMACON['lightning'], // Storm
   961 : CLIMACON['lightning'], // Violent Storm
-  962 : CLIMACON['tornado'], // Hurricane 
+  962 : CLIMACON['tornado'], // Hurricane
 };
 
 var YWclimacon= {
@@ -213,10 +394,6 @@ var YWclimacon= {
   3200 : CLIMACON['cloud_down'], //not available
 };
 
-var options = JSON.parse(localStorage.getItem('timely_options'));
-//console.log('read options: ' + JSON.stringify(options));
-//if (options === null) options = { "default" : "value", "foo" : "bar"};
-
 function getWeatherFromLatLong(latitude, longitude) {
   var response;
   var woeid = -1;
@@ -250,7 +427,6 @@ function getWeatherFromLocation(location_name) {
   req.onload = function(e) {
     if (req.readyState == 4) {
       if (req.status == 200) {
-        // console.log(req.responseText);
         response = JSON.parse(req.responseText);
         if (response) {
           woeid = response.query.results.place.woeid;
@@ -316,22 +492,8 @@ Pebble.addEventListener("ready", function (e) {
     getWatchVersion();
 });
 
-Pebble.addEventListener("showConfiguration", function () {
-    //console.log("Configuration window launching...");
-    var baseURL, pebtok, nocache;
-    baseURL = 'http://www.cyn.org/pebble/timely/';
-    pebtok  = '&pat=' + Pebble.getAccountToken();
-    nocache = '&_=' + new Date().getTime();
-    if (window.localStorage.getItem("timely_options") !== null) {
-        options = JSON.parse(window.localStorage.timely_options);
-    }
-    if (window.localStorage.getItem("version_config") !== null) {
-        Pebble.openURL(baseURL + window.localStorage.version_config + ".php?" + pebtok + nocache);
-        console.log(baseURL + window.localStorage.version_config + ".php?" + pebtok + nocache);
-    } else { // in case we never received the message / new install
-        Pebble.openURL(baseURL + "2.3.0.php?" + pebtok + nocache);
-        console.log(baseURL + "2.3.0.php?" + pebtok + nocache);
-    }
+Pebble.addEventListener('showConfiguration', function() {
+    Pebble.openURL(clay.generateUrl());
 });
 
 function getWatchVersion() {
@@ -355,12 +517,12 @@ function saveWatchVersion(e) {
 function saveBatteryValue(e) {
     console.log("Battery: " + e.payload.send_batt_percent + "%, Charge: " + e.payload.send_batt_charging + ", Plugged: " + e.payload.send_batt_plugged);
 /*
-var currentdate = new Date(); 
+var currentdate = new Date();
 var datetime = "Date: " + currentdate.getDate() + "/"
-                + (currentdate.getMonth()+1)  + "/" 
-                + currentdate.getFullYear() + " @ "  
-                + currentdate.getHours() + ":"  
-                + currentdate.getMinutes() + ":" 
+                + (currentdate.getMonth()+1)  + "/"
+                + currentdate.getFullYear() + " @ "
+                + currentdate.getHours() + ":"
+                + currentdate.getMinutes() + ":"
                 + currentdate.getSeconds();
 console.log(datetime);
 */
@@ -509,34 +671,23 @@ V = waning crescent 0.25 +
     return moon;
 }
 
-function b64_to_utf8( str ) {
-  return decodeURIComponent(escape(base64.decode( str.replace(/ +/g, '+') )));
-}
-
-Pebble.addEventListener("webviewclosed", function (e) {
-    //console.log("Configuration closed");
-    //console.log("Response = " + e.response.length + "   " + e.response);
-    if (e.response !== undefined && e.response !== '' && e.response !== 'CANCELLED') { // user clicked Save/Submit, not Cancel/Done
-        var options, web;
-        options = JSON.parse(b64_to_utf8(e.response));
-        window.localStorage.timely_options = JSON.stringify(options);
-        web = options.web;
-        delete options.web; // remove the 'web' object from our response, which has preferences such as language...
-        options[15] = web.lang; // re-inject the language
-        if (options[10] === 1) { // debugging is on...
-          console.log("Options = " + JSON.stringify(options));
+Pebble.addEventListener('webviewclosed', function(e) {
+    if (!e.response || e.response === '' || e.response === 'CANCELLED') { return; }
+    var settings = clay.getSettings(e.response);
+    // Radiogroup values are always strings; the watch reads them as uint8
+    Object.keys(settings).forEach(function(key) {
+        if (typeof settings[key] === 'string' && /^-?\d+$/.test(settings[key])) {
+            settings[key] = parseInt(settings[key], 10);
         }
-        Pebble.sendAppMessage(options,
-            function (e) {
-                console.log("Successfully delivered message with transactionId=" + e.data.transactionId);
-            },
-            function (e) {
-                console.log("Unable to deliver message with transactionId=" + e.data.transactionId + " Error is: " + e.data.error.message);
-            }
-            );
-    } else if (e.response === 'CANCELLED') {
-        console.log("Android misbehaving on save due to embedded space in e.response... ignoring");
-    }
+    });
+    Pebble.sendAppMessage(settings,
+        function(e) {
+            console.log("Successfully delivered message with transactionId=" + e.data.transactionId);
+        },
+        function(e) {
+            console.log("Unable to deliver message with transactionId=" + e.data.transactionId + " Error is: " + e.data.error.message);
+        }
+    );
 });
 
 
@@ -545,6 +696,9 @@ Pebble.addEventListener("webviewclosed", function (e) {
 SunCalc is a JavaScript library for calculating sun/mooon position and light phases.
 https://github.com/mourner/suncalc
 */
+
+// SunCalc is declared here so it is accessible to isItNight() and getMoonIcon() above
+var SunCalc;
 
 (function () { "use strict";
 
@@ -625,7 +779,7 @@ function getSunCoords(d) {
 }
 
 
-var SunCalc = {};
+SunCalc = {};
 
 
 // calculates sun position for a given date and latitude/longitude
@@ -795,180 +949,4 @@ SunCalc.getMoonIllumination = function (date) {
     };
 };
 
-
-// export as AMD module / Node module / browser variable
-
-if (typeof define === 'function' && define.amd) {
-    define(SunCalc);
-} else if (typeof module !== 'undefined') {
-    module.exports = SunCalc;
-} else {
-    window.SunCalc = SunCalc;
-}
-
 }());
-
-
-/* Now, 155 lines of base64 decoding, to work around two issues:
- *  1)  Something in the e.response process is mangling 2-byte UTF8 characters into two 1-byte characters
- *  2)  Ejecta JSCore doesn't have an atob() function, so we must provide our own...
- *
- * Should Ejecta JSCore gain the atob() function, or the bug be fixed, I anticipate removing this.
- *
- *  ... leaving the encode functions in case I ever need to send, because, why not.
- */
-
-/*
- * Copyright (c) 2010 Nick Galbreath
- * http://code.google.com/p/stringencoders/source/browse/#svn/trunk/javascript
- *
- * Permission is hereby granted, free of charge, to any person
- * obtaining a copy of this software and associated documentation
- * files (the "Software"), to deal in the Software without
- * restriction, including without limitation the rights to use,
- * copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the
- * Software is furnished to do so, subject to the following
- * conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
- * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
- * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
- * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
- * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
- * OTHER DEALINGS IN THE SOFTWARE.
-*/
-
-/* base64 encode/decode compatible with window.btoa/atob
- *
- * window.atob/btoa is a Firefox extension to convert binary data (the "b")
- * to base64 (ascii, the "a").
- *
- * It is also found in Safari and Chrome.  It is not available in IE.
- *
- * if (!window.btoa) window.btoa = base64.encode
- * if (!window.atob) window.atob = base64.decode
- *
- * The original spec's for atob/btoa are a bit lacking
- * https://developer.mozilla.org/en/DOM/window.atob
- * https://developer.mozilla.org/en/DOM/window.btoa
- *
- * window.btoa and base64.encode takes a string where charCodeAt is [0,255]
- * If any character is not [0,255], then an exception is thrown.
- *
- * window.atob and base64.decode take a base64-encoded string
- * If the input length is not a multiple of 4, or contains invalid characters
- *   then an exception is thrown.
- */
-base64 = {};
-base64.PADCHAR = '=';
-base64.ALPHA = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
-base64.getbyte64 = function(s,i) {
-    // This is oddly fast, except on Chrome/V8.
-    //  Minimal or no improvement in performance by using a
-    //   object with properties mapping chars to value (eg. 'A': 0)
-    var idx = base64.ALPHA.indexOf(s.charAt(i));
-    if (idx == -1) {
-        throw "Cannot decode base64";
-    }
-    return idx;
-}
-
-base64.decode = function(s) {
-    // convert to string
-    s = "" + s;
-    var getbyte64 = base64.getbyte64;
-    var pads, i, b10;
-    var imax = s.length
-    if (imax == 0) {
-        return s;
-    }
-
-    if (imax % 4 != 0) {
-        throw "Cannot decode base64";
-    }
-
-    pads = 0
-    if (s.charAt(imax -1) == base64.PADCHAR) {
-        pads = 1;
-        if (s.charAt(imax -2) == base64.PADCHAR) {
-            pads = 2;
-        }
-        // either way, we want to ignore this last block
-        imax -= 4;
-    }
-
-    var x = [];
-    for (i = 0; i < imax; i += 4) {
-        b10 = (getbyte64(s,i) << 18) | (getbyte64(s,i+1) << 12) |
-            (getbyte64(s,i+2) << 6) | getbyte64(s,i+3);
-        x.push(String.fromCharCode(b10 >> 16, (b10 >> 8) & 0xff, b10 & 0xff));
-    }
-
-    switch (pads) {
-    case 1:
-        b10 = (getbyte64(s,i) << 18) | (getbyte64(s,i+1) << 12) | (getbyte64(s,i+2) << 6)
-        x.push(String.fromCharCode(b10 >> 16, (b10 >> 8) & 0xff));
-        break;
-    case 2:
-        b10 = (getbyte64(s,i) << 18) | (getbyte64(s,i+1) << 12);
-        x.push(String.fromCharCode(b10 >> 16));
-        break;
-    }
-    return x.join('');
-}
-
-base64.getbyte = function(s,i) {
-    var x = s.charCodeAt(i);
-    if (x > 255) {
-        throw "INVALID_CHARACTER_ERR: DOM Exception 5";
-    }
-    return x;
-}
-
-
-base64.encode = function(s) {
-    if (arguments.length != 1) {
-        throw "SyntaxError: Not enough arguments";
-    }
-    var padchar = base64.PADCHAR;
-    var alpha   = base64.ALPHA;
-    var getbyte = base64.getbyte;
-
-    var i, b10;
-    var x = [];
-
-    // convert to string
-    s = "" + s;
-
-    var imax = s.length - s.length % 3;
-
-    if (s.length == 0) {
-        return s;
-    }
-    for (i = 0; i < imax; i += 3) {
-        b10 = (getbyte(s,i) << 16) | (getbyte(s,i+1) << 8) | getbyte(s,i+2);
-        x.push(alpha.charAt(b10 >> 18));
-        x.push(alpha.charAt((b10 >> 12) & 0x3F));
-        x.push(alpha.charAt((b10 >> 6) & 0x3f));
-        x.push(alpha.charAt(b10 & 0x3f));
-    }
-    switch (s.length - imax) {
-    case 1:
-        b10 = getbyte(s,i) << 16;
-        x.push(alpha.charAt(b10 >> 18) + alpha.charAt((b10 >> 12) & 0x3F) +
-               padchar + padchar);
-        break;
-    case 2:
-        b10 = (getbyte(s,i) << 16) | (getbyte(s,i+1) << 8);
-        x.push(alpha.charAt(b10 >> 18) + alpha.charAt((b10 >> 12) & 0x3F) +
-               alpha.charAt((b10 >> 6) & 0x3f) + padchar);
-        break;
-    }
-    return x.join('');
-}
