@@ -1,11 +1,6 @@
 var Clay = require('@rebble/clay');
-var clayConfig = require('./config.json');
-
-// Runs inside the webview — no require() available; translations must be inline.
-var customClay = function() {
-    var self = this;
-
-    var translations = {
+var clayConfig = require('./config');
+var translations = {
         EN: {
             trans_connected: 'Linked',        trans_disconnected: 'No Link',
             trans_abbr_sunday: 'Su',  trans_abbr_monday: 'Mo',  trans_abbr_tuesday: 'Tu',
@@ -162,22 +157,9 @@ var customClay = function() {
             trans_wedsday: 'Onsdag',    trans_thursday: 'Torsdag',   trans_friday: 'Fredag',
             trans_saturday: 'Lördag'
         }
-    };
-
-    var langItem = self.getItemByMessageKey('language');
-
-    langItem.on('change', function() {
-        var lang = langItem.get();
-        var t = translations[lang];
-        if (!t) { return; }
-        Object.keys(t).forEach(function(key) {
-            var item = self.getItemByMessageKey(key);
-            if (item) { item.set(t[key]); }
-        });
-    });
 };
 
-var clay = new Clay(clayConfig, customClay, { autoHandleEvents: false });
+var clay = new Clay(clayConfig, null, { autoHandleEvents: false });
 
 var CLIMACON = {
   'cloud'            : '!',
@@ -492,8 +474,11 @@ Pebble.addEventListener("ready", function (e) {
     getWatchVersion();
 });
 
+//Pebble.addEventListener('showConfiguration', function() {
+//    Pebble.openURL(clay.generateUrl());
+//});
 Pebble.addEventListener('showConfiguration', function() {
-    Pebble.openURL(clay.generateUrl());
+  Pebble.openURL(clay.generateUrl());
 });
 
 function getWatchVersion() {
@@ -673,13 +658,21 @@ V = waning crescent 0.25 +
 
 Pebble.addEventListener('webviewclosed', function(e) {
     if (!e.response || e.response === '' || e.response === 'CANCELLED') { return; }
-    var settings = clay.getSettings(e.response);
-    // Radiogroup values are always strings; the watch reads them as uint8
-    Object.keys(settings).forEach(function(key) {
-        if (typeof settings[key] === 'string' && /^-?\d+$/.test(settings[key])) {
-            settings[key] = parseInt(settings[key], 10);
+    var raw = clay.getSettings(e.response, false);
+    var settings = {};
+    Object.keys(raw).forEach(function(key) {
+        var v = (raw[key] !== null && typeof raw[key] === 'object' && raw[key].hasOwnProperty('value'))
+            ? raw[key].value : raw[key];
+        // Select/radiogroup values arrive as strings; watch reads them as uint8
+        if (typeof v === 'string' && /^-?\d+$/.test(v)) {
+            v = parseInt(v, 10);
         }
+        settings[key] = v;
     });
+    // Merge translation strings for the selected language
+    var lang = (raw.language && raw.language.value) ? raw.language.value : raw.language;
+    var t = translations[lang] || translations.EN;
+    Object.keys(t).forEach(function(key) { settings[key] = t[key]; });
     Pebble.sendAppMessage(settings,
         function(e) {
             console.log("Successfully delivered message with transactionId=" + e.data.transactionId);
