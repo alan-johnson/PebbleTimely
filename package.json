@@ -1,7 +1,7 @@
 {
   "name": "timely",
   "author": "Alan Johnson",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "private": true,
   "keywords": [
     "pebble-app"
@@ -23,7 +23,7 @@
       "configurable"
     ],
     "projectType": "native",
-    "displayName": "Timely 3.0",
+    "displayName": "Timely 3.1",
     "uuid": "0B6ECE83-EFCC-48C1-9163-DAC4ED204E99",
     "watchapp": {
       "watchface": true,
@@ -78,6 +78,12 @@
         {
           "type": "font",
           "name": "FONT_FUTURA_CONDENSED_48",
+          "characterRegex": "[0-9:]",
+          "file": "fonts/futura_condensed_bold-webfont.ttf"
+        },
+        {
+          "type": "font",
+          "name": "FONT_FUTURA_CONDENSED_65",
           "characterRegex": "[0-9:]",
           "file": "fonts/futura_condensed_bold-webfont.ttf"
         },
