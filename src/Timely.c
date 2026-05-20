@@ -933,9 +933,9 @@ void position_connection_layer() {
 void position_date_layer() {
   int date_vert_offset = 0;
   if ( strcmp(lang_gen.language,"RU") == 0 ) {
-    date_vert_offset = showing_statusbar ? SY(-4) : 0;
+    date_vert_offset = showing_statusbar ? -4 : 0;
   } else {
-    date_vert_offset = showing_statusbar ? SY(-9) : SY(-5);
+    date_vert_offset = showing_statusbar ? -9 : -5;
   }
   layer_set_frame( text_layer_get_layer(date_layer), GRect(REL_CLOCK_DATE_LEFT, REL_CLOCK_DATE_TOP + date_vert_offset, device_width - 4, SY(REL_CLOCK_DATE_HEIGHT)) );
 }
