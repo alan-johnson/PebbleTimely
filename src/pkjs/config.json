@@ -100,7 +100,8 @@
         "defaultValue": "0",
         "options": [
           { "label": "MMMM DD, YYYY", "value": "0" },
-          { "label": "DD.MM.YYYY",    "value": "1" }
+          { "label": "DD.MM.YYYY",    "value": "1" },
+          { "label": "YYYY/MM/DD",    "value": "237" }
         ]
       },
       {

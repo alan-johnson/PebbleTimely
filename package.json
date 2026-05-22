@@ -1,7 +1,7 @@
 {
   "name": "timely",
   "author": "Alan Johnson",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "private": true,
   "keywords": [
     "pebble-app"
@@ -23,7 +23,7 @@
       "configurable"
     ],
     "projectType": "native",
-    "displayName": "Timely 3.1",
+    "displayName": "Pebble Timely",
     "uuid": "0B6ECE83-EFCC-48C1-9163-DAC4ED204E99",
     "watchapp": {
       "watchface": true,
