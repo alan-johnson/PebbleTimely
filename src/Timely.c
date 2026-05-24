@@ -1511,7 +1511,8 @@ static void window_load(Window *window) {
   layer_add_child(statusbar, text_layer_get_layer(text_connection_layer));
 
   text_battery_layer = text_layer_create( GRect(stat_batt_left, s_batt_top - 2, s_batt_width, s_batt_height) );
-  set_layer_attr_sfont(text_battery_layer, FONT_KEY_GOTHIC_14, GTextAlignmentCenter);
+  //set_layer_attr_sfont(text_battery_layer, FONT_KEY_GOTHIC_14, GTextAlignmentCenter);
+  set_layer_attr_sfont(text_battery_layer, FONT_KEY_GOTHIC_18_BOLD, GTextAlignmentCenter);
   text_layer_set_text(text_battery_layer, "-");
 
   layer_add_child(statusbar, text_layer_get_layer(text_battery_layer));
