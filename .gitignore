@@ -17,3 +17,6 @@ pebble-screenshot*
 Icon?
 
 node_modules/
+scripts/
+.claude/
+docs/

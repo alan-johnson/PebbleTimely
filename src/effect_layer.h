@@ -26,10 +26,10 @@ void effect_layer_add_effect(EffectLayer *effect_layer, effect_cb* effect, void*
 //gets layer
 Layer* effect_layer_get_layer(EffectLayer *effect_layer);
 
-// Recreate inverter_layer for BASALT
-#ifndef PBL_PLATFORM_APLITE
-  #define InverterLayer EffectLayer
-  #define inverter_layer_create(frame)({ EffectLayer* _el=effect_layer_create(frame); effect_layer_add_effect(_el,effect_invert,NULL);_el; })
-  #define inverter_layer_get_layer effect_layer_get_layer
-  #define inverter_layer_destroy effect_layer_destroy
-#endif
+// Provide a uniform InverterLayer API on all platforms via EffectLayer.
+// The native InverterLayer was removed from the Pebble SDK in SDK 3+, so we
+// map the API to EffectLayer everywhere rather than relying on platform guards.
+#define InverterLayer EffectLayer
+#define inverter_layer_create(frame) ({ EffectLayer* _el=effect_layer_create(frame); effect_layer_add_effect(_el,effect_invert,NULL);_el; })
+#define inverter_layer_get_layer effect_layer_get_layer
+#define inverter_layer_destroy effect_layer_destroy

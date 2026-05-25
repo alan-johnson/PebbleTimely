@@ -3,7 +3,7 @@
  */
 
 // Create a struct to hold our persistent settings...
-typedef struct persist { // 18 bytes
+typedef struct persist { // 46 bytes
   uint8_t version;                // version key
   uint8_t inverted;               // Invert display
   uint8_t day_invert;             // Invert colors on today's date
@@ -17,7 +17,7 @@ typedef struct persist { // 18 bytes
   uint8_t week_format;            // week format (calculation, e.g. ISO 8601)
   uint8_t vibe_pat_disconnect;    // vibration pattern for disconnect
   uint8_t vibe_pat_connect;       // vibration pattern for connect
-  char *strftime_format;          // custom date_format string (date_format = 255)
+  char strftime_format[32];       // custom date_format string (date_format = 255)
   uint8_t track_battery;          // track battery information
 } __attribute__((__packed__)) persist;
 

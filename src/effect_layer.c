@@ -9,9 +9,9 @@ static uint8_t find_parent_offset() {
   layer_add_child(p,l);
 
   uint8_t i=0;
-  while(i<16 && *(((Layer**)(void*)l)+i)!=p) ++i;
+  while(i<32 && *(((Layer**)(void*)l)+i)!=p) ++i;
 
-  if(*(((Layer**)(void*)l)+i)!=p) {
+  if(i>=32 || *(((Layer**)(void*)l)+i)!=p) {
     i=0xff;
     APP_LOG(APP_LOG_LEVEL_ERROR,"EffectLayer library was unable to find the parent layer offset! Your app will probably crash (sorry) :(");
   }
